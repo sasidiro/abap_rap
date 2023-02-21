@@ -9,6 +9,7 @@
 define root view entity ZC_TRAVEL_M_828
   as projection on ZI_TRAVEL_M_828
 {
+
       @UI.facet: [ { id:              'Travel',
                      purpose:         #STANDARD,
                      type:            #IDENTIFICATION_REFERENCE,
