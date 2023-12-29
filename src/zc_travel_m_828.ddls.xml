@@ -5,7 +5,7 @@
    <DDLS>
     <DDLNAME>ZC_TRAVEL_M_828</DDLNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
-    <DDTEXT>Projection view</DDTEXT>
+    <DDTEXT>Projection view for travel</DDTEXT>
     <SOURCE_TYPE>P</SOURCE_TYPE>
    </DDLS>
   </asx:values>
