@@ -18,7 +18,6 @@ define root view entity ZC_TRAVEL_M_828
       @UI.hidden: true
   key mykey              as TravelUUID,
 
-
       @UI: {
           lineItem:       [ { position: 10, importance: #HIGH } ],
           identification: [ { position: 10, label: 'Travel ID [1,...,99999999]' } ] }

@@ -10,7 +10,7 @@ CLASS lhc_travel DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS validate_customer          FOR VALIDATE ON SAVE IMPORTING keys FOR travel~validateCustomer.
     METHODS validate_dates             FOR VALIDATE ON SAVE IMPORTING keys FOR travel~validateDates.
-    METHODS validate_agency            FOR VALIDATE ON SAVE IMPORTING keys FOR travel~validateAgency.
+    "METHODS validate_agency            FOR VALIDATE ON SAVE IMPORTING keys FOR travel~validateAgency.
 
     METHODS set_status_completed       FOR MODIFY IMPORTING   keys FOR ACTION travel~acceptTravel              RESULT result.
     METHODS get_features               FOR FEATURES IMPORTING keys REQUEST    requested_features FOR travel    RESULT result.
@@ -47,42 +47,42 @@ CLASS lhc_travel IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD validate_agency.
-
-    READ ENTITY zi_travel_m_828\\travel FROM VALUE #(
-        FOR <root_key> IN keys ( %key-mykey     = <root_key>-mykey
-                                %control = VALUE #( agency_id = if_abap_behv=>mk-on ) ) )
-        RESULT DATA(lt_travel).
-
-    DATA lt_agency TYPE SORTED TABLE OF /dmo/agency WITH UNIQUE KEY agency_id.
-
-    " Optimization of DB select: extract distinct non-initial customer IDs
-    lt_agency = CORRESPONDING #( lt_travel DISCARDING DUPLICATES MAPPING agency_id = agency_id EXCEPT * ).
-    DELETE lt_agency WHERE agency_id IS INITIAL.
-    CHECK lt_agency IS NOT INITIAL.
-
-    " Check if customer ID exist
-    SELECT FROM /dmo/agency FIELDS agency_id
-      FOR ALL ENTRIES IN @lt_agency
-      WHERE agency_id = @lt_agency-agency_id
-      INTO TABLE @DATA(lt_agency_db).
-
-    " Raise msg for non existing customer id
-    LOOP AT lt_travel INTO DATA(ls_travel).
-      IF ls_travel-agency_id IS NOT INITIAL AND NOT line_exists( lt_agency_db[ agency_id = ls_travel-agency_id ] ).
-        APPEND VALUE #(  mykey = ls_travel-mykey ) TO failed-travel.
-        APPEND VALUE #(  mykey = ls_travel-mykey
-                        %msg      = new_message( id       = /dmo/cx_flight_legacy=>agency_unkown-msgid
-                                                  number   = /dmo/cx_flight_legacy=>agency_unkown-msgno
-                                                  v1       = ls_travel-agency_id
-                                                  severity = if_abap_behv_message=>severity-error )
-                        %element-agency_id = if_abap_behv=>mk-on ) TO reported-travel.
-      ENDIF.
-
-    ENDLOOP.
-
-
-  ENDMETHOD.
+*  METHOD validate_agency.
+*
+*    READ ENTITY zi_travel_m_828\\travel FROM VALUE #(
+*        FOR <root_key> IN keys ( %key-mykey     = <root_key>-mykey
+*                                %control = VALUE #( agency_id = if_abap_behv=>mk-on ) ) )
+*        RESULT DATA(lt_travel).
+*
+*    DATA lt_agency TYPE SORTED TABLE OF /dmo/agency WITH UNIQUE KEY agency_id.
+*
+*    " Optimization of DB select: extract distinct non-initial customer IDs
+*    lt_agency = CORRESPONDING #( lt_travel DISCARDING DUPLICATES MAPPING agency_id = agency_id EXCEPT * ).
+*    DELETE lt_agency WHERE agency_id IS INITIAL.
+*    CHECK lt_agency IS NOT INITIAL.
+*
+*    " Check if customer ID exist
+*    SELECT FROM /dmo/agency FIELDS agency_id
+*      FOR ALL ENTRIES IN @lt_agency
+*      WHERE agency_id = @lt_agency-agency_id
+*      INTO TABLE @DATA(lt_agency_db).
+*
+*    " Raise msg for non existing customer id
+*    LOOP AT lt_travel INTO DATA(ls_travel).
+*      IF ls_travel-agency_id IS NOT INITIAL AND NOT line_exists( lt_agency_db[ agency_id = ls_travel-agency_id ] ).
+*        APPEND VALUE #(  mykey = ls_travel-mykey ) TO failed-travel.
+*        APPEND VALUE #(  mykey = ls_travel-mykey
+*                        %msg      = new_message( id       = /dmo/cx_flight_legacy=>agency_unkown-msgid
+*                                                  number   = /dmo/cx_flight_legacy=>agency_unkown-msgno
+*                                                  v1       = ls_travel-agency_id
+*                                                  severity = if_abap_behv_message=>severity-error )
+*                        %element-agency_id = if_abap_behv=>mk-on ) TO reported-travel.
+*      ENDIF.
+*
+*    ENDLOOP.
+*
+*
+*  ENDMETHOD.
 
   METHOD calculatetravelkey.
     READ ENTITIES OF zi_travel_m_828 IN LOCAL MODE
