@@ -1,4 +1,8 @@
-CLASS zbp_i_travel_m_828 DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_travel_m_828.
+class ZBP_I_TRAVEL_M_828 definition
+  public
+  create private .
+
+public section.
 protected section.
 private section.
 ENDCLASS.
