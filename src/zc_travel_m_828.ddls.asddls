@@ -14,7 +14,11 @@ define root view entity ZC_TRAVEL_M_828
                      type:            #IDENTIFICATION_REFERENCE,
                      label:           'Travel',
                      position:        10 } ]
+     
+           
                      
+
+
 
       @UI.hidden: true
   key mykey              as TravelUUID,
